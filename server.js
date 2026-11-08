@@ -7,6 +7,8 @@ const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const productRoutes = require('./routes/productRoutes');
+const careerRoutes = require('./routes/careerRoutes');
+const contactRoutes = require('./routes/contactRoutes');
 
 const app = express();
 
@@ -24,7 +26,8 @@ app.use(cors(corsOptions));
 app.use('/api/auth', authRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
-
+app.use('/api/careers', careerRoutes);
+app.use('/api/contact', contactRoutes);
 // MongoDB Connection & Server Start
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;

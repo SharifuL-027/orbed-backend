@@ -1,31 +1,29 @@
 const express = require('express');
 const { verifyToken } = require('../middleware/authMiddleware');
+const { upload } = require('../config/cloudinary'); // Cloudinary upload config import
+const { 
+  getProducts, 
+  getProductsByCategory, 
+  createProduct, 
+  updateProduct, 
+  deleteProduct 
+} = require('../controllers/productController');
 
 const router = express.Router();
 
 // GET all products (Public)
-router.get('/', (req, res) => {
-  res.json({ message: "Get all products logic here" });
-});
+router.get('/', getProducts);
 
 // GET products by category ID (Public)
-router.get('/category/:categoryId', (req, res) => {
-  res.json({ message: `Get products for category ${req.params.categoryId}` });
-});
+router.get('/category/:categoryId', getProductsByCategory);
 
-// CREATE product (Protected)
-router.post('/', verifyToken, (req, res) => {
-  res.json({ message: "Create product logic here" });
-});
+// CREATE product (Protected) - Multiple images er jonno
+router.post('/', verifyToken, upload.array('imageUrls', 5), createProduct);
 
-// UPDATE product (Protected)
-router.put('/:id', verifyToken, (req, res) => {
-  res.json({ message: `Update product ${req.params.id} logic here` });
-});
+// UPDATE product (Protected) - Multiple images er jonno
+router.put('/:id', verifyToken, upload.array('imageUrls', 5), updateProduct);
 
 // DELETE product (Protected)
-router.delete('/:id', verifyToken, (req, res) => {
-  res.json({ message: `Delete product ${req.params.id} logic here` });
-});
+router.delete('/:id', verifyToken, deleteProduct);
 
 module.exports = router;

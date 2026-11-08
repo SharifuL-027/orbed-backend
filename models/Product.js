@@ -1,15 +1,16 @@
+// models/Product.js
 const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
   name: { type: String, required: true },
   price: { type: Number, required: true },
-  category: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Category', // Category collection er sathe link kora holo
-    required: true 
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category',
+    required: true
   },
   description: { type: String },
-  imageUrls: [{ type: String }] // Cloudinary image URL er jonno Array
+  imageUrls: [{ type: String }] // 🔥 Array of Strings kora holo
 }, { timestamps: true });
 
 module.exports = mongoose.model('Product', productSchema);
