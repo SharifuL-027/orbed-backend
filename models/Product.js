@@ -3,14 +3,14 @@ const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  price: { type: Number, required: true },
-  category: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Category',
-    required: true
-  },
+  category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
   description: { type: String },
-  imageUrls: [{ type: String }] // 🔥 Array of Strings kora holo
+ 
+  stock: { type: String },
+  imageUrls: [{ type: String }],
+  
+  // 🔥 Notun features array add kora holo bullet point er jonno
+  features: { type: [String], default: [] }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Product', productSchema);

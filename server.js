@@ -18,7 +18,10 @@ app.use(express.urlencoded({ extended: true })); // Form data read korar jonno
 
 // CORS Setup
 const corsOptions = {
-  origin: process.env.CLIENT_URL,
+  origin: [
+    'http://localhost:5173',                 // Apnar local development er jonno
+    'https://orbed-energy.netlify.app'       // Apnar live netlify frontend er jonno (last e '/' diben na)
+  ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'], 
   allowedHeaders: ['Content-Type', 'Authorization'], 
   credentials: true, 

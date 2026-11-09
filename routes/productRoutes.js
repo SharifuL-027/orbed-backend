@@ -3,7 +3,8 @@ const { verifyToken } = require('../middleware/authMiddleware');
 const { upload } = require('../config/cloudinary'); // Cloudinary upload config import
 const { 
   getProducts, 
-  getProductsByCategory, 
+  getProductsByCategory,
+  getProductById, 
   createProduct, 
   updateProduct, 
   deleteProduct 
@@ -16,7 +17,7 @@ router.get('/', getProducts);
 
 // GET products by category ID (Public)
 router.get('/category/:categoryId', getProductsByCategory);
-
+router.get('/:id', getProductById);
 // CREATE product (Protected) - Multiple images er jonno
 router.post('/', verifyToken, upload.array('imageUrls', 5), createProduct);
 

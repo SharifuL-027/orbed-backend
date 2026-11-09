@@ -24,27 +24,40 @@ exports.getProductsByCategory = async (req, res) => {
 // CREATE product (Protected)
 exports.createProduct = async (req, res) => {
   try {
-    const { name, price, category, description } = req.body;
+    // 🔥 price bad diye features add kora holo
+    const { name, category, description, stock, features } = req.body;
     
-    // 🔥 req.files theke loop chaliye shobgulo path/URL ber kora
-    const uploadedImages = req.files ? req.files.map(file => file.path) : [];
+    let imageUrls = [];
+    if (req.files && req.files.length > 0) {
+      imageUrls = req.files.map(file => file.path);
+    }
+
+    // Frontend theke features array hishebe ba stringified JSON hishebe ashte pare
+    let parsedFeatures = [];
+    if (features) {
+      try {
+        parsedFeatures = JSON.parse(features);
+      } catch (e) {
+        parsedFeatures = Array.isArray(features) ? features : [features];
+      }
+    }
 
     const newProduct = new Product({
       name,
-      price,
       category,
       description,
-      imageUrls: uploadedImages 
+      stock,
+      features: parsedFeatures, 
+      imageUrls
     });
 
     await newProduct.save();
-    const populatedProduct = await Product.findById(newProduct._id).populate('category', 'name');
-    res.status(201).json(populatedProduct);
+    res.status(201).json({ success: true, message: 'Product created', data: newProduct });
   } catch (error) {
+    console.error("Error:", error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
-
 exports.updateProduct = async (req, res) => {
   try {
     const { name, price, category, description } = req.body;
@@ -78,5 +91,20 @@ exports.deleteProduct = async (req, res) => {
     res.status(200).json({ message: 'Product deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+// Get Single Product by ID
+exports.getProductById = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id).populate('category');
+    
+    if (!product) {
+      return res.status(404).json({ success: false, message: 'Product not found' });
+    }
+    
+    res.status(200).json({ success: true, data: product });
+  } catch (error) {
+    console.error("Error fetching single product:", error);
+    res.status(500).json({ success: false, message: 'Server error', error: error.message });
   }
 };
