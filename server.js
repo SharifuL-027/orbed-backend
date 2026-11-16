@@ -19,8 +19,8 @@ app.use(express.urlencoded({ extended: true })); // Form data read korar jonno
 // CORS Setup
 const corsOptions = {
   origin: [
-    'http://localhost:5173',                 // Ekhane 'https' hobe na, shudhu 'http' hobe
-    'https://orbedenergy.com'       // Ekhane 'https' hobe (karon live site secure thake)
+    'http://localhost:5173',                
+    'https://orbedenergy.com'       
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'], 
   allowedHeaders: ['Content-Type', 'Authorization'], 
