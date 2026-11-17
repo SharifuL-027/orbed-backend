@@ -11,7 +11,7 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const productRoutes = require('./routes/productRoutes');
 const careerRoutes = require('./routes/careerRoutes');
 const contactRoutes = require('./routes/contactRoutes');
-
+const jobRoutes = require('./routes/jobRoutes');
 // --- 🔥 IMPORTANT MIDDLEWARES (Eigulo missing chilo) ---
 app.use(express.json()); // JSON data read korar jonno
 app.use(express.urlencoded({ extended: true })); // Form data read korar jonno
@@ -35,6 +35,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/careers', careerRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/uploads', express.static('uploads'));
+app.use('/api/jobs', jobRoutes);
 
 // MongoDB Connection & Server Start
 const PORT = process.env.PORT || 5000;
