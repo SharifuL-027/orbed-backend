@@ -36,31 +36,40 @@ router.get('/', async (req, res) => {
 });
 
 // POST upload new gallery image (Admin)
-router.post('/', upload.single('image'), async (req, res) => {
+// POST upload single or multiple gallery images (Admin)
+router.post('/', upload.array('images', 20), async (req, res) => {
   try {
     const { title, category, location, isFeatured } = req.body;
-    let imageUrl = req.body.imageUrl || '';
+    const files = req.files || [];
 
-    if (req.file) {
-      imageUrl = `/api/uploads/${req.file.filename}`;
+    if (files.length === 0) {
+      return res.status(400).json({ message: 'Please select at least one image' });
     }
 
-    if (!imageUrl) {
-      return res.status(400).json({ message: 'Image file or URL is required' });
-    }
+    const featuredFlag = isFeatured === 'true' || isFeatured === true;
 
-    const newItem = new Gallery({
-      title,
-      category: category || 'Solar Projects',
-      location: location || 'Bangladesh',
-      imageUrl,
-      isFeatured: isFeatured === 'true' || isFeatured === true,
+    const docsToInsert = files.map((file, index) => {
+      // Title na dile file-er original name use korbe; multiple hole numbering korbe
+      const cleanFileName = path.parse(file.originalname).name.replace(/[-_]+/g, ' ');
+      const itemTitle = title?.trim()
+        ? files.length > 1
+          ? `${title.trim()} (${index + 1})`
+          : title.trim()
+        : cleanFileName;
+
+      return {
+        title: itemTitle,
+        category: category || 'Solar Projects',
+        location: location || 'Bangladesh',
+        imageUrl: `/api/uploads/${file.filename}`,
+        isFeatured: featuredFlag,
+      };
     });
 
-    const saved = await newItem.save();
-    res.status(201).json(saved);
+    const savedItems = await Gallery.insertMany(docsToInsert);
+    res.status(201).json(savedItems);
   } catch (error) {
-    res.status(400).json({ message: 'Failed to upload gallery item', error: error.message });
+    res.status(400).json({ message: 'Failed to upload gallery items', error: error.message });
   }
 });
 
